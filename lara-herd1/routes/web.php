@@ -14,3 +14,6 @@ Route::get('/price', function () {
 Route::get('compare', function () {
     return view('pages.compare');
 })->name('compare-plan');
+Route::get('/login', function () {
+    return view('pages.auth.login');
+});
