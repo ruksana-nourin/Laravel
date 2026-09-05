@@ -8,10 +8,12 @@ Route::get('/', function () {
 });
 Route::get('/dashboard', function () {
     return view('admin.pages.dashboard');
-});
+})->name('dashboard');
 //user routes
 Route::get('/users',[UserController::class,'index'])->name('users.index');
 Route::get('/user/create',[UserController::class,'create'])->name('users.create');
+Route::get('/user/{id}/edit',[UserController::class,'edit'])->name('users.edit');
+Route::get('/user/{id}',[UserController::class,'show'])->name('users.show');
 
 
 //Authentication Routes
