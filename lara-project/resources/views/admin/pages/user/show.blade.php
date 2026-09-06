@@ -11,18 +11,22 @@
 
     <div class="card">
         <div class="card-body">
-             <div class="table-user-cell">
-                 <img src="{{ asset('assets/images/user_1.jpg') }}" alt="Eleanor Pena" class="img-fluid rounded-4"
-                     onerror="this.src='assets/images/avatar.png'" width="80">
-                 <div>
-                     <div class="h3">Eleanor Pena</div>
-                     <div class="h5 text-muted fw-normal">eleanor.pena@example.com</div>
-                 </div>
-             </div>
-             <hr>
-            <p><strong>Name:</strong> </p>
-            <p><strong>Email:</strong> </p>
-            <p><strong>Role:</strong> </p>
+            <div class="table-user-cell">
+                <span
+                    class="bg-dark rounded bg-brand-lime d-flex align-items-center justify-content-center text-lime fw-bold fs-2 px-4 py-3" width="100" >{{ Str::substr($user->name, 0, 1) }}</span>
+                <div>
+                    <div class="h3">{{ $user->name }}</div>
+                    <div class="h5 text-muted fw-normal">{{ $user->email }}</div>
+                </div>
+            </div>
+            <hr>
+            <p><strong>Name:</strong>{{ $user->name }} </p>
+            <p><strong>Email:</strong> {{ $user->email }} </p>
+            <p><strong>Role:</strong> {{ $user->role }} </p>
+
+        </div>
+        <div class="mb-3 text-end">
+            <a href="{{ route('users.edit', ['id' => $user->id]) }}" class="btn-custom btn-custom-secondary">Edit User</a>
         </div>
     </div>
 @endsection

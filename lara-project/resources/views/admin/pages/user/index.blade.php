@@ -13,6 +13,13 @@
     </a>
   </x-admin.phead>
 
+  @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ session('success') }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  @endif
+
   <div class="table-card-custom">
     <!-- Header Controls -->
     <div class="table-header-control">
@@ -72,11 +79,17 @@
 
               <td>
                 <div class="d-flex justify-content-center gap-1">
-                  <a href="{{ route('users.show', ['id' => 1]) }}" class="table-btn-action" title="View details"><i
+                  <a href="{{ route('users.show', ['id' => $item->id]) }}" class="table-btn-action" title="View details"><i
                       class="bi bi-eye"></i></a>
-                  <a href="{{ route('users.edit', ['id' => 1]) }}" class="table-btn-action" title="Edit user"><i
+                  <a href="{{ route('users.edit', ['id' => $item->id]) }}" class="table-btn-action" title="Edit user"><i
                       class="bi bi-pencil"></i></a>
-                  <a href="#" class="table-btn-action delete" title="Delete row"><i class="bi bi-trash"></i></a>
+                  <button type="button" class="table-btn-action delete" title="Delete user" data-bs-toggle="modal"
+                    data-bs-target="#deleteModal" data-url="{{ route('users.destroy', ['id' => $item->id]) }}"
+                    data-user-name="{{ $item->name }}">
+                    <i class="bi bi-trash"></i>
+                  </button>
+
+
                 </div>
               </td>
             </tr>
@@ -93,18 +106,91 @@
 
     </div>
   </div>
+  <form id="deleteForm" method="POST">
+    @csrf
+    @method('DELETE')
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+
+          <div class="modal-header">
+            <h5 class="modal-title fw-semibold" id="deleteModalLabel">
+              Delete Item
+            </h5>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            </button>
+          </div>
+
+          <div class="modal-body text-center py-4">
+
+            <div class="d-flex align-items-center justify-content-center
+                           mx-auto mb-3 rounded-circle bg-danger-subtle" style="width: 64px; height: 64px;">
+              <i class="bi bi-trash3 text-danger fs-4"></i>
+            </div>
+
+            <h5 class="mb-2">Are you sure?</h5>
+
+            <p class="text-body-secondary mb-0">
+              Are you sure you want to delete this item?
+              This action cannot be undone.
+            </p>
+
+          </div>
+
+          <div class="modal-footer justify-content-center border-0 pb-4">
+            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">
+              Cancel
+            </button>
+
+            <button type="submit" class="btn btn-danger px-4" id="confirmDelete">
+              Delete
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+
 @endsection
 
 @section('styles')
   <style>
-    .table-footer-control nav{
+    .table-footer-control nav {
       width: 100%;
     }
-    .table-footer-control nav div:last-child{
+
+    .table-footer-control nav div:last-child {
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
   </style>
 
+@endsection
+@section('scripts')
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      const deleteModal = document.getElementById('deleteModal');
+      const deleteForm = document.getElementById('deleteForm');
+
+      deleteModal.addEventListener('show.bs.modal', function (event) {
+
+        const button = event.relatedTarget;
+
+        const url = button.getAttribute('data-url');
+
+        deleteForm.action = url;
+      });
+
+    });
+
+  </script>
 @endsection
