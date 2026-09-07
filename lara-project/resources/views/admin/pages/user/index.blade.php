@@ -79,14 +79,21 @@
 
               <td>
                 <div class="d-flex justify-content-center gap-1">
-                  <a href="{{ route('users.show', ['id' => $item->id]) }}" class="table-btn-action" title="View details"><i
+                  <a href="{{ route('users.show', ['user' => $item->id]) }}" class="table-btn-action" title="View details"><i
                       class="bi bi-eye"></i></a>
-                  <a href="{{ route('users.edit', ['id' => $item->id]) }}" class="table-btn-action" title="Edit user"><i
+                  <a href="{{ route('users.edit', ['user' => $item->id]) }}" class="table-btn-action" title="Edit user"><i
                       class="bi bi-pencil"></i></a>
-                  <button type="button" class="table-btn-action delete" title="Delete user" data-bs-toggle="modal"
-                    data-bs-target="#deleteModal" data-url="{{ route('users.destroy', ['id' => $item->id]) }}"
-                    data-user-name="{{ $item->name }}">
+                  {{-- <button type="button" class="table-btn-action delete" title="Delete user" data-bs-toggle="modal"
+                    data-bs-target="#deleteModal" data-url="{{ route('users.destroy', ['user' => $item->id]) }}"
+                    data-user-id="{{ $item->id }}" data-user-name="{{ $item->name }}">
                     <i class="bi bi-trash"></i>
+                  </button> --}}
+                  <button type="button" class="table-btn-action delete" 
+                          data-id="{{ $item->id }}"
+                          data-name="{{ $item->name }}" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#modalDelete" title="Delete row">
+                          <i class="bi bi-trash"></i>
                   </button>
 
 
@@ -106,11 +113,13 @@
 
     </div>
   </div>
-  <form id="deleteForm" method="POST">
+
+
+  <!-- Delete Confirmation Modal -->
+
+  {{-- <form id="deleteForm" method="POST">
     @csrf
     @method('DELETE')
-
-    <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
 
       <div class="modal-dialog modal-dialog-centered">
@@ -128,16 +137,18 @@
           <div class="modal-body text-center py-4">
 
             <div class="d-flex align-items-center justify-content-center
-                           mx-auto mb-3 rounded-circle bg-danger-subtle" style="width: 64px; height: 64px;">
+                                 mx-auto mb-3 rounded-circle bg-danger-subtle" style="width: 64px; height: 64px;">
               <i class="bi bi-trash3 text-danger fs-4"></i>
             </div>
 
             <h5 class="mb-2">Are you sure?</h5>
 
             <p class="text-body-secondary mb-0">
-              Are you sure you want to delete this item?
+              Are you sure you want to delete
+              <b class="text-bold fw-5">{{ $item->name }}</b>?
               This action cannot be undone.
             </p>
+
 
           </div>
 
@@ -155,7 +166,21 @@
       </div>
     </div>
 
-  </form>
+  </form> --}}
+  <x-admin.modal id="modalDelete" title="Delete User">
+    <div class="text-center">
+      <i class="bi bi-trash fs-1 text-danger"></i>
+      <p class="mt-2">Are you sure you want to delete this user?</p>
+      <span class="name fw-bold badge border border-danger text-danger py-2 px-3">Mina</span>
+      <hr>
+      <form method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-danger px-4">Delete</button>
+      </form>
+    </div>
+  </x-admin.modal>
 
 
 @endsection
@@ -174,23 +199,41 @@
   </style>
 
 @endsection
-@section('scripts')
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
+{{-- @section('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
 
-      const deleteModal = document.getElementById('deleteModal');
-      const deleteForm = document.getElementById('deleteForm');
+    const deleteModal = document.getElementById('deleteModal');
+    const deleteForm = document.getElementById('deleteForm');
 
-      deleteModal.addEventListener('show.bs.modal', function (event) {
 
-        const button = event.relatedTarget;
 
-        const url = button.getAttribute('data-url');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
 
-        deleteForm.action = url;
-      });
+
+      const button = event.relatedTarget;
+
+      const url = button.getAttribute('data-url');
+
+      deleteForm.action = url;
 
     });
 
+  });
+
+</script>
+@endsection --}}
+@section('scripts')
+  <script>
+    document.querySelectorAll('.delete').forEach(button => {
+      button.addEventListener('click', function () {
+        let id = this.dataset.id;
+        let name = this.dataset.name;
+        // alert(id);
+        document.querySelector('#modalDelete .name').innerText = name;
+        // document.querySelector('#modalDelete form').action = '/users/' + id;
+        document.querySelector('#modalDelete form').action = `{{ route('users.destroy', ['user' => ':id']) }}`.replace(':id', id);
+      })
+    })
   </script>
 @endsection

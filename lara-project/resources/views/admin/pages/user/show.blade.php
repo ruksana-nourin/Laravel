@@ -26,7 +26,7 @@
 
         </div>
         <div class="mb-3 text-end">
-            <a href="{{ route('users.edit', ['id' => $user->id]) }}" class="btn-custom btn-custom-secondary">Edit User</a>
+            <a href="{{ route('users.edit', ['user' => $user->id]) }}" class="btn-custom btn-custom-secondary">Edit User</a>
         </div>
     </div>
 @endsection
