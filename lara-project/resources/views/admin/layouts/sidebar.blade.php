@@ -29,6 +29,12 @@
             <span>Users</span>
           </a>
         </li>
+        <li class="sidebar-menu-item">
+          <a href="{{ route('products.index') }}" class="sidebar-menu-link" id="menu-blankpage" title="Blank Page">
+            <i class="bi bi-cart"></i>
+            <span>Products</span>
+          </a>
+        </li>
 
       </ul>
     </div>

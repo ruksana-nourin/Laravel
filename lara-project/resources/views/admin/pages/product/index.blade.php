@@ -1,15 +1,17 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Users List')
+@section('title', 'Products List')
 @php
   // echo "<pre>";
-  // print_r($Users);
+  // print_r($Products);
   // echo "</pre>";
 @endphp
+
 @section('content')
-  <x-admin.phead title="Users" subtitle="Manage your users and their information here.">
-    <a href="{{ route('users.create') }}" class="btn-custom btn-custom-secondary">
-      <i class="bi bi-file-earmark-plus"></i> Add New User
+
+  <x-admin.phead title="Products" subtitle="Manage your products and their information here.">
+    <a href="{{ route('products.create') }}" class="btn-custom btn-custom-secondary">
+      <i class="bi bi-file-earmark-plus"></i> Add New Product
     </a>
   </x-admin.phead>
 
@@ -53,48 +55,63 @@
       <table class="table-custom">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>USER</th>
-            <th>Role</th>
+            <th>ID.</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Brand</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Status</th>
             <th class="text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
-          @foreach ($Users as $item)
+          @foreach ($products as $item)
 
             <!-- Row 1 -->
             <tr>
               <td class="table-order-id">{{ $item->id }}</td>
               <td>
-                <div class="table-user-cell">
-                  <span
-                    class="table-user-avatar bg-brand-lime d-flex align-items-center justify-content-center text-lime fw-bold fs-5">{{ Str::substr($item->name, 0, 1) }}
-                  </span>
+                <div class="d-flex align-items-center gap-3">
+                  @if ($item->image)
+                    <img src="{{ $item->image }}" alt="" class="rounded-3" width="60" height="60">
+                  @else
+                    <img src="https://placehold.net/1.png" alt="" class="rounded-3" width="60" height="60">
+                  @endif
                   <div>
-                    <div class="table-user-name">{{ $item->name }}</div>
-                    <div class="table-user-sub">{{ $item->email }}</div>
+                    <h5 class="mb-0 fw-normal">{{ $item->name }}</h5>
+                    <p class="mb-0 text-muted">{{ $item->id }}</p>
                   </div>
                 </div>
               </td>
-              <td class="table-product-name">{{ $item->role }}</td>
+              <td class="table-product-name">{{ $item->category->name ?? 'N/A' }}</td>
+              <td class="table-product-name">{{ $item->brand->name ?? 'N/A' }}</td>
+              <td class="table-product-name">{{ $item->price }}</td>
+              <td class="table-product-name">{{ $item->quantity }}</td>
+              {{-- <td class="table-product-name">{{ $item->active }}</td> --}}
+              {{-- <td>
+                <span class="badge border {{ $item->active ==1 ? 'border-success text-success' : 'border-danger text-danger'}}">
+                  {{ $item->active ==1 ? 'Active' : 'Inactive' }}
+                </span>
+              </td> --}}
+              <td class="table-product-name">
+                @if($item->active == 1)
+                  <span class="badge bg-success">Active</span>
+                @else
+                  <span class="badge bg-danger">Inactive</span>
+                @endif
+              </td>
 
               <td>
                 <div class="d-flex justify-content-center gap-1">
-                  <a href="{{ route('users.show', ['user' => $item->id]) }}" class="table-btn-action" title="View details"><i
-                      class="bi bi-eye"></i></a>
+                  <a href="{{ route('users.show', ['user' => $item->id]) }}" class="table-btn-action"
+                    title="View details"><i class="bi bi-eye"></i></a>
                   <a href="{{ route('users.edit', ['user' => $item->id]) }}" class="table-btn-action" title="Edit user"><i
                       class="bi bi-pencil"></i></a>
-                  {{-- <button type="button" class="table-btn-action delete" title="Delete user" data-bs-toggle="modal"
-                    data-bs-target="#deleteModal" data-url="{{ route('users.destroy', ['user' => $item->id]) }}"
-                    data-user-id="{{ $item->id }}" data-user-name="{{ $item->name }}">
+
+                  <button type="button" class="table-btn-action delete" data-id="{{ $item->id }}"
+                    data-name="{{ $item->name }}" data-bs-toggle="modal" data-bs-target="#modalDelete" title="Delete row">
                     <i class="bi bi-trash"></i>
-                  </button> --}}
-                  <button type="button" class="table-btn-action delete" 
-                          data-id="{{ $item->id }}"
-                          data-name="{{ $item->name }}" 
-                          data-bs-toggle="modal" 
-                          data-bs-target="#modalDelete" title="Delete row">
-                          <i class="bi bi-trash"></i>
                   </button>
 
 
@@ -110,7 +127,7 @@
     <!-- Footer Controls / Pagination -->
     <div class="table-footer-control">
 
-      {{ $Users->links() }}
+      {{-- {{ $Users->links() }}
 
     </div>
   </div>
@@ -138,7 +155,7 @@
           <div class="modal-body text-center py-4">
 
             <div class="d-flex align-items-center justify-content-center
-                                 mx-auto mb-3 rounded-circle bg-danger-subtle" style="width: 64px; height: 64px;">
+                                       mx-auto mb-3 rounded-circle bg-danger-subtle" style="width: 64px; height: 64px;">
               <i class="bi bi-trash3 text-danger fs-4"></i>
             </div>
 

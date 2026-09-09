@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ Route::get('/dashboard', function () {
 // Route::delete('/users/{id}',[UserController::class,'destroy'])->name('users.destroy');
 
 Route::resource('users', UserController::class);
+Route::resource('products', ProductController::class);
 
 //Authentication Routes
 Route::get('/login', function () {
