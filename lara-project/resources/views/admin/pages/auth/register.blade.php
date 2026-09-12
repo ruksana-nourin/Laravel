@@ -1,27 +1,33 @@
 @extends('admin.layouts.single-master')
 
-@section('title', 'Login')
+@section('title', 'Register')
 
 @section('content')
     <div class="login-card">
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
 
         <!-- Brand Identity -->
         <a href="index.html" class="login-brand text-decoration-none">
             <i class="bi bi-asterisk"></i>
-            <span>Spark Admin</span>
+            <span>E-Shop</span>
         </a>
 
-        <p class="login-subtitle">Please sign in to access your dashboard</p>
+        <p class="login-subtitle">Welcome to E-Shop. Please register to continue.</p>
 
         <!-- Login Form -->
-        <form action="{{ route('login.store') }}" method="POST" id="loginForm">
+        <form action="{{ route('register') }}" method="POST" id="loginForm" class="needs-validation">
             @csrf
+
+            <!-- Name Input Group -->
+            <div class="login-form-group">
+                <label class="login-form-label">Name</label>
+                <div class="login-input-group">
+                    <i class="bi bi-person input-icon"></i>
+                    <input type="name" name="name" id="name" class="login-input" placeholder="Enter your name"
+                        value="">
+
+                </div>
+            </div>
+            <x-input-error :messages="$errors->get('name')" class="mt-2 text-danger" />
 
             <!-- Email Input Group -->
             <div class="login-form-group">
@@ -29,11 +35,12 @@
                 <div class="login-input-group">
                     <i class="bi bi-envelope input-icon"></i>
                     <input type="email" name="email" id="email" class="login-input" placeholder="name@company.com"
-                        value="tom@gmail.com">
+                        value="">
 
                 </div>
             </div>
             <x-input-error :messages="$errors->get('email')" class="mt-2 text-danger" />
+
 
             <!-- Password Input Group -->
             <div class="login-form-group">
@@ -49,6 +56,21 @@
             </div>
             <x-input-error :messages="$errors->get('password')" class="mt-2 text-danger" />
 
+            <!-- Confirm Password Input Group -->
+            <div class="login-form-group">
+                <label for="password" class="login-form-label">Confirm Password</label>
+                <div class="login-input-group">
+                    <i class="bi bi-shield-lock input-icon"></i>
+                    <input type="password" name="password_confirmation" id="password" class="login-input login-input-password"
+                        placeholder="••••••••" value="123">
+                    <button type="button" class="password-toggle-btn" id="toggle-password" aria-label="Show password">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-danger" />
+
+
             <!-- Options (Remember me & Forgot Password) -->
             <div class="login-options">
                 <label class="custom-control-label">
@@ -60,7 +82,7 @@
 
             <!-- Submit Button -->
             <button type="submit" class="btn-login" id="btn-submit">
-                <span>Sign In to Dashboard</span>
+                <span>Register Now</span>
                 <i class="bi bi-arrow-right"></i>
             </button>
 
@@ -83,8 +105,9 @@
 
         <!-- Footer Link -->
         <p class="login-footer-text">
-            Don't have an account? <a href="{{ route('register') }}" id="link-register">Register Now</a>
+            Already have an account? <a href="{{ route('login') }}" id="link-login">Sign In Now</a>
         </p>
+
 
     </div>
 @endsection
