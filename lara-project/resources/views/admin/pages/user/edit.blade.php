@@ -3,14 +3,22 @@
 @section('title', 'Edit User')
 @section('content')
     <x-admin.phead title="Edit User" subtitle="Update the user's information below.">
-        <a href="{{ route('users.index') }}" class="btn-custom btn-custom-secondary">
-            <i class="bi bi-arrow-left"></i> Back to Users
-        </a>
+        @if((auth()->user()->role_id != 5))
+            <a href="{{ route('users.index') }}" class="btn-custom btn-custom-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Users
+            </a>
+        @endif
     </x-admin.phead>
 
     <div class="table-card-custom">
         <!-- Header Controls -->
         <div class="table-header-control">
+            {{-- @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif --}}
             <!-- Search bar -->
             <div class="table-search-box">
                 <i class="bi bi-search table-search-icon"></i>
@@ -56,7 +64,8 @@
                 <!-- Text input -->
                 <div class="mb-3">
                     <label for="basicText" class="form-label-custom">Username</label>
-                    <input type="text" name = "name" class="form-control-custom" id="basicText" value="{{ $user->name }}" placeholder="Enter username">
+                    <input type="text" name="name" class="form-control-custom" id="basicText" value="{{ $user->name }}"
+                        placeholder="Enter username">
                     <x-admin.error-msg name="name" />
                 </div>
 
@@ -83,7 +92,7 @@
                     <x-admin.error-msg name="role_id" />
                 </div>
 
-                
+
                 <div class="mb-3 text-end">
                     <button type="submit" class="btn-custom btn-custom-secondary">Edit User</button>
                 </div>

@@ -88,12 +88,7 @@
               <td class="table-product-name">{{ $item->brand->name ?? 'N/A' }}</td>
               <td class="table-product-name">{{ $item->price }}</td>
               <td class="table-product-name">{{ $item->quantity }}</td>
-              {{-- <td class="table-product-name">{{ $item->active }}</td> --}}
-              {{-- <td>
-                <span class="badge border {{ $item->active ==1 ? 'border-success text-success' : 'border-danger text-danger'}}">
-                  {{ $item->active ==1 ? 'Active' : 'Inactive' }}
-                </span>
-              </td> --}}
+              
               <td class="table-product-name">
                 @if($item->active == 1)
                   <span class="badge bg-success">Active</span>
@@ -127,64 +122,13 @@
     <!-- Footer Controls / Pagination -->
     <div class="table-footer-control">
 
-      {{-- {{ $Products->links() }}
+      {{ $products->links() }}
 
     </div>
   </div>
 
-
   <!-- Delete Confirmation Modal -->
 
-  {{-- <form id="deleteForm" method="POST">
-    @csrf
-    @method('DELETE')
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-
-          <div class="modal-header">
-            <h5 class="modal-title fw-semibold" id="deleteModalLabel">
-              Delete Item
-            </h5>
-
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-            </button>
-          </div>
-
-          <div class="modal-body text-center py-4">
-
-            <div class="d-flex align-items-center justify-content-center
-                                       mx-auto mb-3 rounded-circle bg-danger-subtle" style="width: 64px; height: 64px;">
-              <i class="bi bi-trash3 text-danger fs-4"></i>
-            </div>
-
-            <h5 class="mb-2">Are you sure?</h5>
-
-            <p class="text-body-secondary mb-0">
-              Are you sure you want to delete
-              <b class="text-bold fw-5">{{ $item->name }}</b>?
-              This action cannot be undone.
-            </p>
-
-
-          </div>
-
-          <div class="modal-footer justify-content-center border-0 pb-4">
-            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">
-              Cancel
-            </button>
-
-            <button type="submit" class="btn btn-danger px-4" id="confirmDelete">
-              Delete
-            </button>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-  </form> --}}
   <x-admin.modal id="modalDelete" title="Delete User">
     <div class="text-center">
       <i class="bi bi-trash fs-1 text-danger"></i>
@@ -217,30 +161,7 @@
   </style>
 
 @endsection
-{{-- @section('scripts')
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
 
-    const deleteModal = document.getElementById('deleteModal');
-    const deleteForm = document.getElementById('deleteForm');
-
-
-
-    deleteModal.addEventListener('show.bs.modal', function (event) {
-
-
-      const button = event.relatedTarget;
-
-      const url = button.getAttribute('data-url');
-
-      deleteForm.action = url;
-
-    });
-
-  });
-
-</script>
-@endsection --}}
 @section('scripts')
   <script>
     document.querySelectorAll('.delete').forEach(button => {

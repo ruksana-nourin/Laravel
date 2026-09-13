@@ -45,6 +45,7 @@
         <!-- END: Top Navbar Component -->
 
         @yield('content')
+        {{-- {{ dd(auth()->user()) }} --}}
 
         <!-- START: Footer Component -->
         @include('admin.layouts.footer')

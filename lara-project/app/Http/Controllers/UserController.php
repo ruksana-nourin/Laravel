@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -30,10 +31,15 @@ class UserController extends Controller
         //     ->orderBy('id', 'asc')
         //     ->select('u.id', 'u.name', 'u.email', 'r.name as role')
         //     ->first();
+        if (Auth::user()->role_id == 5) {
+            abort(403);
+            exit;
+        }
         $Users = User::join('roles as r', 'users.role_id', '=', 'r.id')
             ->orderBy('id', 'desc')
             ->select('users.id', 'users.name', 'users.email', 'r.name as role')
             ->paginate(10);
+
         // dd($Users);
         return view('admin.pages.user.index', compact('Users'));
     }
@@ -42,8 +48,13 @@ class UserController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {   
+    {
+        if (Auth::user()->role_id == 5) {
+            abort(403);
+            exit;
+        }
         $roles = Role::orderBy('name', 'asc')->get();
+
         return view('admin.pages.user.create', compact('roles'));
     }
 
@@ -52,13 +63,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        if (Auth::user()->role_id == 5) {
+            abort(403);
+            exit;
+        }
         // dd($request->all());
         $request->validate([
             'name' => 'required|min:3|max:50',
             'email' => 'required|email|unique:users,email',
             'role_id' => 'required',
             'password' => 'required|min:3|max:15',
-            'password_confirmation' => 'required|same:password'
+            'password_confirmation' => 'required|same:password',
         ]);
         // dd();
 
@@ -69,7 +84,7 @@ class UserController extends Controller
         //     'password' => Hash::make($request->password)
         // ]);
 
-        $user = new User();
+        $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role_id = $request->role_id;
@@ -77,17 +92,17 @@ class UserController extends Controller
         $user->save();
         // $user =false;
         // if($user){
-        if($user->save()){
+        if ($user->save()) {
 
             return redirect()
                 ->route('users.index')
                 ->with('success', 'User created successfully');
-        }else{
+        } else {
             return redirect()
                 ->route('users.create')
                 ->with('error', 'User creation failed');
 
-            }
+        }
     }
 
     /**
@@ -95,12 +110,16 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
+        if (Auth::user()->role_id == 5 && Auth::user()->id != $id) {
+            abort(403);
+        }
         // $user = User::find($id);
         $user = User::join('roles as r', 'users.role_id', '=', 'r.id')
             ->where('users.id', $id)
             ->select('users.id', 'users.name', 'users.email', 'r.name as role')
             ->first();
-            // dd($user->role);
+
+        // dd($user->role);
         return view('admin.pages.user.show', compact('user'));
     }
 
@@ -109,6 +128,10 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
+        if (Auth::user()->role_id == 5 && Auth::user()->id != $id) {
+            abort(403);
+            exit;
+        }
         $roles = Role::all();
         $user = User::find($id);
         // dd($user);
@@ -121,11 +144,15 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (Auth::user()->role_id == 5 && Auth::user()->id != $id) {
+            abort(403);
+            exit;
+        }
         // dd($request->all());
         $request->validate([
             'name' => 'required|min:3|max:50',
             'email' => "required|email|unique:users,email,$id",
-            'role_id' => 'required'
+            'role_id' => 'required',
         ]);
 
         // $user = User::find($id);
@@ -134,23 +161,40 @@ class UserController extends Controller
         // $user->role_id = $request->role_id;
         // $user->save();
 
-        $user= User::where('id', $id)->update([
+        $user = User::where('id', $id)->update([
             'name' => $request->name,
             'email' => $request->email,
-            'role_id' => $request->role_id
+            'role_id' => $request->role_id,
         ]);
 
-        if($user){
+        // if ($user) {
+
+        //     return redirect()
+        //         ->route('users.index')
+        //         ->with('success', 'User updated successfully');
+        // } else {
+        //     return redirect()
+        //         ->route('users.edit', ['id' => $id])
+        //         ->with('error', 'User update failed');
+
+        // }
+        if ($user) {
+            if (Auth::user()->role_id == 5){
+                return redirect()
+                ->route('users.show', ['user' => $id])
+                ->with('success', 'User updated successfully');
+
+            }
 
             return redirect()
                 ->route('users.index')
                 ->with('success', 'User updated successfully');
-        }else{
+        } else {
             return redirect()
                 ->route('users.edit', ['id' => $id])
                 ->with('error', 'User update failed');
 
-            }
+        }
     }
 
     /**
@@ -161,10 +205,15 @@ class UserController extends Controller
         // dd($id);
         // $user = User::find($id);
         // $user->delete();
+        if (Auth::user()->role_id != 1) {
+            abort(403);
+        } else {
 
-        User::destroy($id);
-        return redirect()
-            ->route('users.index')
-            ->with('success', 'User deleted successfully');
+            User::destroy($id);
+
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'User deleted successfully');
+        }
     }
 }

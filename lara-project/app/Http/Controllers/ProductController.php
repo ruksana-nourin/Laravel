@@ -22,7 +22,7 @@ class ProductController extends Controller
         //                     ->select('p.*', 'c.name as category_name', 'b.name as brand_name')
         //                     ->get();
 
-        $products = Product::with('category', 'brand')->orderBy('id', 'desc')->get();
+        $products = Product::with('category', 'brand')->orderBy('id', 'desc')->paginate(10);
         // dd($products->first()->category->name);
         return view('admin.pages.product.index', compact('products'));
     }

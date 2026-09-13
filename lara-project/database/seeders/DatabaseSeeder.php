@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         //     ['name' => 'Sales person'],
         //     ['name' => 'Editor'],
         //     ['name' => 'Vendor'],
+        //     ['name' => 'Guest'],
         // ]);
         // Brand::factory(5)->create();
         // Category::factory()->createMany([

@@ -89,6 +89,7 @@
                     data-user-id="{{ $item->id }}" data-user-name="{{ $item->name }}">
                     <i class="bi bi-trash"></i>
                   </button> --}}
+                   @if (auth()->user()->role_id == 1 )
                   <button type="button" class="table-btn-action delete" 
                           data-id="{{ $item->id }}"
                           data-name="{{ $item->name }}" 
@@ -96,6 +97,7 @@
                           data-bs-target="#modalDelete" title="Delete row">
                           <i class="bi bi-trash"></i>
                   </button>
+                  @endif
 
 
                 </div>
