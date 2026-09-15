@@ -21,6 +21,12 @@
 
     <div class="card">
         <div class="card-body">
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             <div class="table-user-cell">
                 <span
                     class="bg-dark rounded bg-brand-lime d-flex align-items-center justify-content-center text-lime fw-bold fs-2 px-4 py-3"

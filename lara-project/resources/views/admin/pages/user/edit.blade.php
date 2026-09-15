@@ -13,12 +13,7 @@
     <div class="table-card-custom">
         <!-- Header Controls -->
         <div class="table-header-control">
-            {{-- @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif --}}
+            
             <!-- Search bar -->
             <div class="table-search-box">
                 <i class="bi bi-search table-search-icon"></i>

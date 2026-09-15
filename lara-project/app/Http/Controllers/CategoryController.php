@@ -12,7 +12,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        $categories = Category::orderBy('id', 'desc')->paginate(10);
+
+        return view('admin.pages.category.index', compact('categories'));
     }
 
     /**
@@ -20,7 +22,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.pages.category.create');
     }
 
     /**
@@ -28,7 +30,17 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name',
+        ]);
+
+        Category::create([
+            'name' => $request->name,
+        ]);
+
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Category created successfully.');
     }
 
     /**
@@ -44,7 +56,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('admin.pages.category.edit', compact('category'));
     }
 
     /**
@@ -52,14 +64,40 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,'.$category->id,
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+        ]);
+
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Category updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Category $category)
+    
     {
-        //
+        // dd($category->products);
+        // Check whether this category has any products
+
+        $hasProducts = $category->products()->exists();
+
+        if ($hasProducts) {
+            return redirect()
+                ->route('categories.index')
+                ->with('error', 'This category cannot be deleted because it has products.');
+        }
+
+        $category->delete();
+
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'Category deleted successfully.');
     }
 }

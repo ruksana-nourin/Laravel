@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
@@ -24,6 +26,8 @@ Route::middleware('auth')->group(function () {
 });
 Route::middleware('auth', 'role_id:1,2,3,4')->group(function () {
     Route::resource('products', ProductController::class);
+    Route::resource('categories', CategoryController::class);
+    Route::resource('brands', BrandController::class);
 
 });
 

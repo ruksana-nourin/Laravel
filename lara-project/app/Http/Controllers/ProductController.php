@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Services\UploadImgService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -23,6 +24,7 @@ class ProductController extends Controller
         //                     ->get();
 
         $products = Product::with('category', 'brand')->orderBy('id', 'desc')->paginate(10);
+
         // dd($products->first()->category->name);
         return view('admin.pages.product.index', compact('products'));
     }
@@ -35,7 +37,7 @@ class ProductController extends Controller
         $brands = Brand::orderBy('name', 'asc')->get();
         $categories = Category::orderBy('name', 'asc')->get();
 
-        return view('admin.pages.product.create',compact('brands','categories'));
+        return view('admin.pages.product.create', compact('brands', 'categories'));
     }
 
     /**
@@ -51,18 +53,17 @@ class ProductController extends Controller
             'category_id' => 'required',
             'brand_id' => 'required',
             'reorder_level' => 'required',
-            
 
-        //for multiple file
+            // for multiple file
             // 'image' => 'required|array',
             // 'image*' => 'image| mimes:jpeg,png,jpg,svg|max:2048',
             'image' => 'image| mimes:jpeg,png,jpg,svg|max:1024',
-        ],[
-            'image.max'=> 'Image is too large! Must be less then 1024kb.'
+        ], [
+            'image.max' => 'Image is too large! Must be less then 1024kb.',
         ]
-        
+
         );
-        if($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             // dd('image found');
             // $imgName= time(). '.' . $request->image->extension();
             // dd($request->image->extension());
@@ -77,13 +78,14 @@ class ProductController extends Controller
                 'quantity' => $request->quantity,
                 'reorder_level' => $request->reorder_level,
                 'description' => $request->description,
-                'active' => $request->active ? 1:0 ,
+                'active' => $request->active ? 1 : 0,
                 // 'image' => "uploads/". $imgName,
                 'image' => $imgName,
             ]);
+
             return redirect()->route('products.index')
-            ->with('success', 'Product created successfully');
-        }else{
+                ->with('success', 'Product created successfully');
+        } else {
             // dd('No Image');
 
             Product::create([
@@ -94,8 +96,9 @@ class ProductController extends Controller
                 'quantity' => $request->quantity,
                 'reorder_level' => $request->reorder_level,
                 'description' => $request->description,
-                'active' => $request->active ? 1:0 
+                'active' => $request->active ? 1 : 0,
             ]);
+
             return redirect()->route('products.index')->with('success', 'Product created successfully');
         }
     }
@@ -105,7 +108,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return view('admin.pages.product.show', compact('product'));
     }
 
     /**
@@ -113,7 +116,14 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $categories = Category::all();
+        $brands = Brand::all();
+
+        return view('admin.pages.product.edit', compact(
+            'product',
+            'categories',
+            'brands'
+        ));
     }
 
     /**
@@ -121,7 +131,40 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+            'reorder_level' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        // Checkbox handling
+        $validated['active'] = $request->has('active');
+
+        // If a new image is uploaded
+        if ($request->hasFile('image')) {
+
+            // Delete old image
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            // Store new image
+            $validated['image'] = $request->file('image')->store(
+                'products',
+                'public'
+            );
+        }
+
+        $product->update($validated);
+
+        return redirect()
+            ->route('products.index')
+            ->with('success', 'Product updated successfully.');
     }
 
     /**
@@ -131,12 +174,13 @@ class ProductController extends Controller
     {
         // dd($product);
         // dd($product->image);
-        if($product->image){
+        if ($product->image) {
             unlink(public_path($product->image));
         }
         Product::destroy($product->id);
+
         return redirect()->route('products.index')
-        ->with('success','Product deleted Successfully.');
+            ->with('success', 'Product deleted Successfully.');
 
     }
 }

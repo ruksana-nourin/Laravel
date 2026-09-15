@@ -59,6 +59,26 @@
                 <span>Products</span>
               </a>
             </li>
+            <li class="sidebar-menu-item">
+              <a href="{{ route('categories.index') }}" {{--
+                class="sidebar-menu-link {{ request()->routeIs('products*') ? 'active' : '' }}" id="menu-blankpage"
+                title="Blank Page"> --}}
+                class="sidebar-menu-link {{ activeLink('categories*') }}" id="menu-blankpage"
+                title="Blank Page">
+                <i class="bi bi-tags"></i>
+                <span>Category</span>
+              </a>
+            </li>
+            <li class="sidebar-menu-item">
+              <a href="{{ route('brands.index') }}" {{--
+                class="sidebar-menu-link {{ request()->routeIs('products*') ? 'active' : '' }}" id="menu-blankpage"
+                title="Blank Page"> --}}
+                class="sidebar-menu-link {{ activeLink('brands*') }}" id="menu-blankpage"
+                title="Blank Page">
+                <i class="bi-brands bi-bootstrap"></i>
+                <span>Brand</span>
+              </a>
+            </li>
           @endif
 
         </ul>

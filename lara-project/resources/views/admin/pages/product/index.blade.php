@@ -99,9 +99,9 @@
 
               <td>
                 <div class="d-flex justify-content-center gap-1">
-                  <a href="{{ route('users.show', ['user' => $item->id]) }}" class="table-btn-action"
+                  <a href="{{ route('products.show', ['product' => $item->id]) }}" class="table-btn-action"
                     title="View details"><i class="bi bi-eye"></i></a>
-                  <a href="{{ route('users.edit', ['user' => $item->id]) }}" class="table-btn-action" title="Edit product"><i
+                  <a href="{{ route('products.edit', ['product' => $item->id]) }}" class="table-btn-action" title="Edit product"><i
                       class="bi bi-pencil"></i></a>
 
                   <button type="button" class="table-btn-action delete" data-id="{{ $item->id }}"
