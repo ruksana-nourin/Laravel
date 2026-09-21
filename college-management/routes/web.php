@@ -4,6 +4,9 @@ use App\Http\Controllers\AcademicClassController;
 use App\Http\Controllers\AcademicSessionController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\FeeCategoryController;
+use App\Http\Controllers\FeePaymentController;
+use App\Http\Controllers\FeeStructureController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\SemesterController;
@@ -36,6 +39,9 @@ Route::resource('groups', GroupController::class);
 Route::resource('academic-sessions', AcademicSessionController::class);
 Route::resource('semesters', SemesterController::class);
 Route::resource('students', StudentController::class);
+Route::resource('fee-categories', FeeCategoryController::class);
+Route::resource('fee-structures', FeeStructureController::class);
+Route::resource('fee-payments', FeePaymentController::class);
 
 
 
@@ -53,6 +59,29 @@ Route::get(
     'students/sections/{academicClass}',
     [StudentController::class, 'getSections']
 )->name('students.sections');
+
+//fee
+Route::get(
+    'fee-payments/fee-structures/{semester}',
+    [FeePaymentController::class, 'getFeeStructures']
+)->name('fee-payments.fee-structures');
+
+Route::get(
+    'fee-payments/previous-payment/{student}/{academicSession}/{semester}',
+    [FeePaymentController::class, 'getPreviousPayment']
+)->name('fee-payments.previous-payment');
+
+// print
+Route::get(
+    'fee-payments/{feePayment}/print',
+    [FeePaymentController::class, 'print']
+)->name('fee-payments.print');
+
+//fee details
+Route::get(
+    'fee-payments/previous-payment-details/{student}/{academicSession}/{semester}',
+    [FeePaymentController::class, 'getPreviousPaymentDetails']
+)->name('fee-payments.previous-payment-details');
 
 // Authentication
 Route::get('/login', function () {

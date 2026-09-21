@@ -12,13 +12,13 @@
             <div class="profile-desc">
                 <div class="profile-pic">
                     <div class="count-indicator">
-                        <img class="img-xs rounded-circle " src="{{ asset('assets/images/faces/face15.jpg') }}"
+                        <img class="img-xs rounded-circle " src="{{ asset('assets/images/faces/face23.jpg') }}"
                             alt="">
                         <span class="count bg-success"></span>
                     </div>
                     <div class="profile-name">
-                        <h5 class="mb-0 font-weight-normal">Henry Klein</h5>
-                        <span>Gold Member</span>
+                        <h5 class="mb-0 font-weight-normal">Ruksana Nourin</h5>
+                        <span>Admin</span>
                     </div>
                 </div>
                 <a href="#" id="profile-dropdown" data-toggle="dropdown"><i class="mdi mdi-dots-vertical"></i></a>
@@ -70,7 +70,7 @@
                 <span class="menu-title">Dashboard</span>
             </a>
         </li>
-        <li class="nav-item menu-items">
+        <li class="nav-item menu-items {{ request()->routeIs('students.*') ? 'active' : '' }}">
             <a class="nav-link" data-toggle="collapse" href="#student" aria-expanded="false" aria-controls="ui-basic">
                 <span class="menu-icon">
                     {{-- <i class="mdi mdi-people-fill"></i> --}}
@@ -81,14 +81,14 @@
             </a>
             <div class="collapse" id="student">
                 <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="{{ route('students.index') }}">All Students</a>
+                    <li class="nav-item {{ request()->routeIs('students.create') ? 'active' : '' }}"> <a class="nav-link" href="{{ route('students.create') }}">Add Student</a>
                     </li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Add Student</a>
+                    <li class="nav-item {{ request()->routeIs('students.index') ? 'active' : '' }}"> <a class="nav-link" href="{{ route('students.index') }}">All Students</a>
                     </li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Student
-                            Categories</a>
+                    {{-- <li class="nav-item"> <a class="nav-link" href="{{ route('students.profile') }}">
+                            Student Profile</a>
                     </li>
-                </ul>
+                </ul> --}}
             </div>
         </li>
         <li class="nav-item menu-items">
@@ -109,11 +109,13 @@
                 </ul>
             </div>
         </li>
+
+        {{-- Academic --}}
         <li
             class="nav-item 
-                    {{ request()->routeIs('departments.*', 'courses.*', 'academic-classes.*','sections.*', 'groups.*','academic-sessions.*','semesters.*') ? 'active' : '' }}">
+                    {{ request()->routeIs('departments.*', 'courses.*', 'academic-classes.*', 'sections.*', 'groups.*', 'academic-sessions.*', 'semesters.*') ? 'active' : '' }}">
             <a class="nav-link" data-toggle="collapse" href="#academic"
-                aria-expanded="{{ request()->routeIs('departments.*', 'courses.*', 'academic-classes.*','sections.*', 'groups.*','academic-sessions.*','semesters.*') ? 'true' : 'false' }}"
+                aria-expanded="{{ request()->routeIs('departments.*', 'courses.*', 'academic-classes.*', 'sections.*', 'groups.*', 'academic-sessions.*', 'semesters.*') ? 'true' : 'false' }}"
                 aria-controls="academic">
                 <span class="menu-icon">
 
@@ -127,13 +129,17 @@
             </a>
 
             <div class="collapse {{ request()->routeIs(
-                                            'departments.*', 
-                                            'courses.*', 
-                                            'academic-classes.*',
-                                            'sections.*', 
-                                            'groups.*',
-                                            'academic-sessions.*',
-                                            'semesters.*') ? 'show' : '' }}" id="academic">
+                'departments.*',
+                'courses.*',
+                'academic-classes.*',
+                'sections.*',
+                'groups.*',
+                'academic-sessions.*',
+                'semesters.*',
+            )
+                ? 'show'
+                : '' }}"
+                id="academic">
                 <ul class="nav flex-column sub-menu">
                     <li class="nav-item {{ request()->routeIs('departments.*') ? 'active' : '' }}"> <a
                             class="nav-link" href="{{ route('departments.index') }}">Department</a>
@@ -144,22 +150,50 @@
                     <li class="nav-item {{ request()->routeIs('academic-classes.*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('academic-classes.index') }}">Classes</a>
                     </li>
-                    <li class="nav-item {{ request()->routeIs('sections.*') ? 'active' : '' }}"> 
+                    <li class="nav-item {{ request()->routeIs('sections.*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('sections.index') }}">sections</a>
                     </li>
-                    <li class="nav-item {{ request()->routeIs('groups.*') ? 'active' : '' }}"> 
+                    <li class="nav-item {{ request()->routeIs('groups.*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('groups.index') }}">Groups</a>
                     </li>
-                    <li class="nav-item {{ request()->routeIs('academic-sessions.*') ? 'active' : '' }}"> 
+                    <li class="nav-item {{ request()->routeIs('academic-sessions.*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('academic-sessions.index') }}">Academic Sessions</a>
                     </li>
-                    <li class="nav-item {{ request()->routeIs('semesters.*') ? 'active' : '' }}"> 
+                    <li class="nav-item {{ request()->routeIs('semesters.*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('semesters.index') }}">Semesters</a>
                     </li>
                 </ul>
             </div>
         </li>
 
+        {{-- fee Categories --}}
+        <li class="nav-item menu-items {{ request()->routeIs('fee-categories.*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('fee-categories.index') }}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-credit-card"></i>
+                </span>
+                <span class="menu-title">Fee Categories</span>
+            </a>
+        </li>
+
+        {{-- fee Categories --}}
+        <li class="nav-item menu-items {{ request()->routeIs('fee-structures.*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('fee-structures.index') }}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-dots-vertical"></i>
+                </span>
+                <span class="menu-title">Fee Structure</span>
+            </a>
+        </li>
+        {{-- fee Payments --}}
+        <li class="nav-item menu-items {{ request()->routeIs('fee-payments.*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('fee-payments.index') }}">
+                <span class="menu-icon">
+                    <i class="mdi mdi-cash"></i>
+                </span>
+                <span class="menu-title">Fee Payment</span>
+            </a>
+        </li>
 
         <li class="nav-item menu-items {{ request()->routeIs('users.*') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('users.index') }}">
@@ -169,85 +203,7 @@
                 <span class="menu-title">Users</span>
             </a>
         </li>
-        <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
-                aria-controls="ui-basic">
-                <span class="menu-icon">
-                    <i class="mdi mdi-laptop"></i>
-                </span>
-                <span class="menu-title">Basic UI Elements</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basic">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a></li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a>
-                    </li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/ui-features/typography.html">Typography</a>
-                    </li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item menu-items">
-            <a class="nav-link" href="pages/forms/basic_elements.html">
-                <span class="menu-icon">
-                    <i class="mdi mdi-playlist-play"></i>
-                </span>
-                <span class="menu-title">Form Elements</span>
-            </a>
-        </li>
-        <li class="nav-item menu-items">
-            <a class="nav-link" href="pages/tables/basic-table.html">
-                <span class="menu-icon">
-                    <i class="mdi mdi-table-large"></i>
-                </span>
-                <span class="menu-title">Tables</span>
-            </a>
-        </li>
-        <li class="nav-item menu-items">
-            <a class="nav-link" href="pages/charts/chartjs.html">
-                <span class="menu-icon">
-                    <i class="mdi mdi-chart-bar"></i>
-                </span>
-                <span class="menu-title">Charts</span>
-            </a>
-        </li>
-        <li class="nav-item menu-items">
-            <a class="nav-link" href="pages/icons/mdi.html">
-                <span class="menu-icon">
-                    <i class="mdi mdi-contacts"></i>
-                </span>
-                <span class="menu-title">Icons</span>
-            </a>
-        </li>
-        <li class="nav-item menu-items">
-            <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
-                <span class="menu-icon">
-                    <i class="mdi mdi-security"></i>
-                </span>
-                <span class="menu-title">User Pages</span>
-                <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="auth">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/blank-page.html"> Blank Page </a>
-                    </li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/error-404.html"> 404 </a></li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/error-500.html"> 500 </a></li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/login.html"> Login </a></li>
-                    <li class="nav-item"> <a class="nav-link" href="pages/samples/register.html"> Register </a></li>
-                </ul>
-            </div>
-        </li>
-        <li class="nav-item menu-items">
-            <a class="nav-link"
-                href="http://www.bootstrapdash.com/demo/corona-free/jquery/documentation/documentation.html">
-                <span class="menu-icon">
-                    <i class="mdi mdi-file-document-box"></i>
-                </span>
-                <span class="menu-title">Documentation</span>
-            </a>
-        </li>
+        
     </ul>
 </nav>
 <!-- partial -->

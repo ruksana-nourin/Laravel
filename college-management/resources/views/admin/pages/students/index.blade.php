@@ -56,10 +56,10 @@
                                         </tr>
                                     </thead>
 
+
                                     <tbody>
 
-                                        @forelse ($students as $student)
-
+                                        @foreach ($students as $student)
                                             <tr>
 
                                                 <td>
@@ -70,11 +70,12 @@
                                                     <div class="d-flex align-items-center">
 
                                                         @if ($student->image)
-                                                            <img src="{{ asset($student->image) }}" alt="{{ $student->name }}"
-                                                                width="40" height="40" class="rounded-circle me-2">
+                                                            <img src="{{ asset($student->image) }}"
+                                                                alt="{{ $student->name }}" width="40" height="40"
+                                                                class="rounded-circle me-2">
                                                         @endif
 
-                                                        <span>
+                                                        <span class="p-1">
                                                             {{ $student->name }}
                                                         </span>
 
@@ -116,24 +117,19 @@
                                                         <i class="mdi mdi-pencil"></i>
                                                     </a>
 
-                                                    <button type="button" class="btn btn-sm btn-danger">
+                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                        data-target="#modalDelete" data-id="{{ $student->id }}"
+                                                        data-name="{{ $student->name }}">
                                                         <i class="mdi mdi-delete"></i>
                                                     </button>
                                                 </td>
 
                                             </tr>
-
-                                        @empty
-
-                                            <tr>
-                                                <td colspan="9" class="text-center">
-                                                    No students found.
-                                                </td>
-                                            </tr>
-
-                                        @endforelse
+                                        @endforeach
 
                                     </tbody>
+
+
 
                                 </table>
 
@@ -149,4 +145,65 @@
         </div>
     </div>
 
+    {{-- Delete Modal --}}
+
+    <x-admin.modal id="modalDelete" title="Delete Student">
+
+        <div class="text-center">
+
+            <i class="bi bi-trash fs-1 text-danger"></i>
+
+            <p class="mt-2">
+                Are you sure you want to delete this student?
+            </p>
+
+            <span class="name fw-bold badge border border-danger text-danger py-2 px-3">
+                Student
+            </span>
+
+            <hr>
+
+            <form method="POST">
+
+                @csrf
+                @method('DELETE')
+
+                <button type="button" class="btn btn-light px-4" data-dismiss="modal">
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn btn-danger px-4">
+                    Delete
+                </button>
+
+            </form>
+
+        </div>
+
+    </x-admin.modal>
+
 @endsection
+
+@section('scripts')
+
+<script>
+    $('#modalDelete').on('show.bs.modal', function (event) {
+
+        let button = $(event.relatedTarget);
+
+        let id = button.data('id');
+        let name = button.data('name');
+
+        let modal = $(this);
+
+        modal.find('.name').text(name);
+
+        modal.find('form').attr(
+            'action',
+            "{{ url('students') }}/" + id
+        );
+
+    });
+</script>
+    
+@endsection()
