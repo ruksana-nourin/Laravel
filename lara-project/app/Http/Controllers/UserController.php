@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserModify;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -178,11 +180,16 @@ class UserController extends Controller
         //         ->with('error', 'User update failed');
 
         // }
+        $role = Role::findOrFail($request->role_id);
+        Mail::to($request->email)
+            // ->send(new UserModify($request->name,$request->email,$request->role_id,));
+            ->send(new UserModify($request->name,$request->email,$role,));
+
         if ($user) {
-            if (Auth::user()->role_id == 5){
+            if (Auth::user()->role_id == 5) {
                 return redirect()
-                ->route('users.show', ['user' => $id])
-                ->with('success', 'User updated successfully');
+                    ->route('users.show', ['user' => $id])
+                    ->with('success', 'User updated successfully');
 
             }
 
