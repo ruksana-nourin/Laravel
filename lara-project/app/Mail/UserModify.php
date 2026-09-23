@@ -13,19 +13,29 @@ class UserModify extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $name;
+    // public $name;
 
-    public $email;
-    public $role;
+    // public $email;
+    // public $role;
 
+    // /**
+    //  * Create a new message instance.
+    //  */
+    // public function __construct($_name, $_email,$_role)
+    // {
+    //     $this->name = $_name;
+    //     $this->email = $_email;
+    //     $this->role = $_role;
+    // }
+    public $user;
+
+   
     /**
      * Create a new message instance.
      */
-    public function __construct($_name, $_email,$_role)
+    public function __construct($_user)
     {
-        $this->name = $_name;
-        $this->email = $_email;
-        $this->role = $_role;
+        $this->user = $_user;
     }
 
     /**

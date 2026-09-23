@@ -48,6 +48,14 @@
             </a>
           </li>
           @if (auth()->user()->role_id != 5)
+            <li class="sidebar-menu-item">
+              <a href="{{ route('roles.index') }}" 
+                class="sidebar-menu-link {{ activeLink('roles*') }}" id="menu-blankpage"
+                title="Blank Page">
+                <i class="bi-people"></i>
+                <span>Roles</span>
+              </a>
+            </li>
 
             <li class="sidebar-menu-item">
               <a href="{{ route('products.index') }}" {{--
@@ -104,20 +112,20 @@
     </div>
   @else
     <li class="sidebar-menu-item">
-        <a href="{{ route('users.show', ['user' => auth()->user()->id]) }}"
-           class="sidebar-menu-link" id="menu-blankpage" title="Blank Page">
-            <i class="bi bi-person"></i>
-            <span>Your Profile</span>
-        </a>
+      <a href="{{ route('users.show', ['user' => auth()->user()->id]) }}" class="sidebar-menu-link" id="menu-blankpage"
+        title="Blank Page">
+        <i class="bi bi-person"></i>
+        <span>Your Profile</span>
+      </a>
     </li>
     <li class="sidebar-menu-item">
-        <a href="{{ route('users.edit', ['user' => auth()->user()->id]) }}"
-           class="sidebar-menu-link" id="menu-blankpage" title="Blank Page">
-            <i class="bi bi-pencil"></i>
-            <span>Edit Profile</span>
-        </a>
+      <a href="{{ route('users.edit', ['user' => auth()->user()->id]) }}" class="sidebar-menu-link" id="menu-blankpage"
+        title="Blank Page">
+        <i class="bi bi-pencil"></i>
+        <span>Edit Profile</span>
+      </a>
     </li>
-@endif
+  @endif
 
 
 

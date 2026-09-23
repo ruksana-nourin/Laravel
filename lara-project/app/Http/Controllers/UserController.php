@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Fluent;
 
 class UserController extends Controller
 {
@@ -180,12 +181,29 @@ class UserController extends Controller
         //         ->with('error', 'User update failed');
 
         // }
-        $role = Role::findOrFail($request->role_id);
-        Mail::to($request->email)
-            // ->send(new UserModify($request->name,$request->email,$request->role_id,));
-            ->send(new UserModify($request->name,$request->email,$role,));
 
         if ($user) {
+            // $role = Role::findOrFail($request->role_id);
+            // Mail::to($request->email)
+            //     ->send(new UserModify($request->name, $request->email, $role));
+
+            $role = Role::findOrFail($request->role_id);
+            $user= User::find($id);
+            $userdata = [
+                'id' => $user->id,
+                'name'=> $user->name,
+                'email'=> $user->email,
+                'role'=> $role->name,
+                'update'=> $user->updated_at,
+            ];
+            // $userdata = (object) $userdata;      //php object
+            $userdata = new Fluent($userdata) ;     //laravel object
+
+            // dd($userdata);
+
+            Mail::to($request->email)
+                ->send(new UserModify($userdata));
+
             if (Auth::user()->role_id == 5) {
                 return redirect()
                     ->route('users.show', ['user' => $id])
