@@ -3,12 +3,12 @@
 @section('title', 'Roles List')
 @php
   // echo "<pre>";
-  // print_r($Users);
+  // print_r($roles);
   // echo "</pre>";
 @endphp
 @section('content')
   <x-admin.phead title="Roles" subtitle="Manage your roles and their information here.">
-    <a href="{{ route('users.create') }}" class="btn-custom btn-custom-secondary">
+    <a href="{{ route('roles.create') }}" class="btn-custom btn-custom-secondary">
       <i class="bi bi-file-earmark-plus"></i> Add New Role
     </a>
   </x-admin.phead>
@@ -55,11 +55,42 @@
           <tr>
             <th>ID</th>
             <th>Role</th>
-            <th class="text-center">Actions</th>
+            <th class="">Actions</th>
           </tr>
         </thead>
-        <tbody>
-          
+        <tbody id="tbody">
+          @foreach ($roles as $item)
+
+            <!-- Row 1 -->
+            <tr>
+              <td class="table-order-id">{{ $roles->firstItem() + $loop->index }}</td>
+              <td>
+                <div class="table-role-cell">
+
+                  <div>
+                    <div class="table-role-name">{{ $item->name }}</div>
+                  </div>
+                </div>
+              </td>
+
+              <td>
+                <div class="">
+
+                  <a href="{{ route('roles.edit', ['role' => $item->id]) }}" class="table-btn-action" title="Edit role"><i
+                      class="bi bi-pencil"></i></a>
+
+                  @if (auth()->user()->role_id == 1)
+                    <button type="button" class="table-btn-action delete" data-id="{{ $item->id }}"
+                      data-name="{{ $item->name }}" data-bs-toggle="modal" data-bs-target="#modalDelete" title="Delete row">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  @endif
+
+
+                </div>
+              </td>
+            </tr>
+          @endforeach
         </tbody>
       </table>
     </div>
@@ -67,68 +98,17 @@
     <!-- Footer Controls / Pagination -->
     <div class="table-footer-control">
 
-      {{-- {{ $Roles->links() }} --}}
+      {{ $roles->links() }}
 
     </div>
   </div>
 
 
-  <!-- Delete Confirmation Modal -->
 
-  {{-- <form id="deleteForm" method="POST">
-    @csrf
-    @method('DELETE')
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
-
-          <div class="modal-header">
-            <h5 class="modal-title fw-semibold" id="deleteModalLabel">
-              Delete Item
-            </h5>
-
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-            </button>
-          </div>
-
-          <div class="modal-body text-center py-4">
-
-            <div class="d-flex align-items-center justify-content-center
-                                 mx-auto mb-3 rounded-circle bg-danger-subtle" style="width: 64px; height: 64px;">
-              <i class="bi bi-trash3 text-danger fs-4"></i>
-            </div>
-
-            <h5 class="mb-2">Are you sure?</h5>
-
-            <p class="text-body-secondary mb-0">
-              Are you sure you want to delete
-              <b class="text-bold fw-5">{{ $item->name }}</b>?
-              This action cannot be undone.
-            </p>
-
-
-          </div>
-
-          <div class="modal-footer justify-content-center border-0 pb-4">
-            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">
-              Cancel
-            </button>
-
-            <button type="submit" class="btn btn-danger px-4" id="confirmDelete">
-              Delete
-            </button>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-  </form> --}}
-  <x-admin.modal id="modalDelete" title="Delete User">
+  <x-admin.modal id="modalDelete" title="Delete role">
     <div class="text-center">
       <i class="bi bi-trash fs-1 text-danger"></i>
-      <p class="mt-2">Are you sure you want to delete this user?</p>
+      <p class="mt-2">Are you sure you want to delete this role?</p>
       <span class="name fw-bold badge border border-danger text-danger py-2 px-3">Mina</span>
       <hr>
       <form method="POST">
@@ -157,40 +137,85 @@
   </style>
 
 @endsection
-{{-- @section('scripts')
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
 
-    const deleteModal = document.getElementById('deleteModal');
-    const deleteForm = document.getElementById('deleteForm');
-
-
-
-    deleteModal.addEventListener('show.bs.modal', function (event) {
-
-
-      const button = event.relatedTarget;
-
-      const url = button.getAttribute('data-url');
-
-      deleteForm.action = url;
-
-    });
-
-  });
-
-</script>
-@endsection --}}
 @section('scripts')
   <script>
-    document.querySelectorAll('.delete').forEach(button => {
-      button.addEventListener('click', function () {
+    // document.querySelectorAll('.delete').forEach(button => {
+    //   button.addEventListener('click', function () {
+    $(document).on('click', '.delete', function () {
+
         let id = this.dataset.id;
         let name = this.dataset.name;
         // alert(id);
         document.querySelector('#modalDelete .name').innerText = name;
-        // document.querySelector('#modalDelete form').action = '/users/' + id;
-        document.querySelector('#modalDelete form').action = `{{ route('users.destroy', ['user' => ':id']) }}`.replace(':id', id);
+        // document.querySelector('#modalDelete form').action = '/roles/' + id;
+        document.querySelector('#modalDelete form').action = `{{ route('roles.destroy', ['role' => ':id']) }}`.replace(':id', id);
+      })
+    // })
+  </script>
+  <script>
+    let searchInput = $('.table-search-input');
+    searchInput.on('input', function () {
+
+      // console.log(searchInput.val());
+
+      $.ajax({
+        url: '{{ route('roles.search') }}',
+        method: 'GET',
+        data: {
+          search: $(this).val(),
+        },
+        success: function (res) {
+          // console.log(res.data);
+          let rows = res.data;
+          let html = '';
+          const editUrl = "{{ route('roles.edit', ['role' => ':id']) }}";
+          rows.forEach((item, index) => {
+
+            let url = editUrl.replace(':id', item.id);
+
+
+
+            html += `
+            <tr>
+                <td class="table-order-id">${index + 1}</td>
+
+                <td>
+                    ${item.name}
+                </td>
+
+                <td>
+                    <div>
+
+                        <a href="${url}"
+                           class="table-btn-action"
+                           title="Edit role">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+
+                        @if (auth()->user()->role_id == 1)
+                          <button type="button"
+                                  class="table-btn-action delete"
+                                  data-id="${item.id}"
+                                  data-name="${item.name}"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#modalDelete"
+                                  title="Delete row">
+                              <i class="bi bi-trash"></i>
+                          </button>
+                        @endif
+
+                    </div>
+                </td>
+            </tr>
+        `;
+          });
+
+          $("#tbody").html(html);
+        },
+        error: function (error) {
+          console.log(error);
+        }
       })
     })
   </script>

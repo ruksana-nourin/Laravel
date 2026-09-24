@@ -1,19 +1,23 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Edit User')
+@section('title', 'Edit Role')
 @section('content')
-    <x-admin.phead title="Edit User" subtitle="Update the user's information below.">
-        @if((auth()->user()->role_id != 5))
-            <a href="{{ route('users.index') }}" class="btn-custom btn-custom-secondary">
-                <i class="bi bi-arrow-left"></i> Back to Users
-            </a>
-        @endif
+    <x-admin.phead title="Edit User" subtitle="Fill out the form below to add a new user to the system.">
+        <a href="{{ route('roles.index') }}" class="btn-custom btn-custom-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Roles
+        </a>
     </x-admin.phead>
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <div class="table-card-custom">
         <!-- Header Controls -->
         <div class="table-header-control">
-            
             <!-- Search bar -->
             <div class="table-search-box">
                 <i class="bi bi-search table-search-icon"></i>
@@ -42,9 +46,10 @@
         <div class="card border-light shadow-sm p-4 h-100">
             <h5 class="card-title mb-4">Basic Fields</h5>
 
-            <form action="{{ route('users.update', ['user' => $user->id]) }}" method="POST">
+            <form action="{{ route('roles.update',['role'=> $role->id]) }}" method="POST">
                 @csrf
                 @method('PUT')
+                
                 {{-- @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul class="mb-0">
@@ -58,40 +63,23 @@
 
                 <!-- Text input -->
                 <div class="mb-3">
-                    <label for="basicText" class="form-label-custom">Username</label>
-                    <input type="text" name="name" class="form-control-custom" id="basicText" value="{{ $user->name }}"
-                        placeholder="Enter username">
+                    <label for="basicText" class="form-label-custom">Role Name</label>
+                    <input type="text" name="name" class="form-control-custom" id="basicText" value="{{ $role->name }}"
+                        placeholder="Enter rolename">
                     <x-admin.error-msg name="name" />
                 </div>
 
-                <!-- Email input -->
-                <div class="mb-3">
-                    <label for="basicEmail" class="form-label-custom">Email Address</label>
-                    <input type="text" name="email" class="form-control-custom" id="basicEmail" value="{{ $user->email }}"
-                        placeholder="name@example.com">
-                    <div class="text-muted">We'll never share your email with anyone else.</div>
-                    <x-admin.error-msg name="email" />
-                </div>
-                <!-- Role input -->
-                <div class="mb-3">
-                    <label for="basicRole" class="form-label-custom">Role</label>
-                    <select class="form-control-custom" id="basicRole" name="role_id">
-                        <option value="0" selected disabled>Select a role</option>
-                        @foreach ($roles as $item)
-
-                            <option value="{{ $item->id }}" @selected($user->role_id == $item->id)>
-                                {{ $item->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                    <x-admin.error-msg name="role_id" />
-                </div>
-
-
+               
+               
+               
+                
                 <div class="mb-3 text-end">
-                    <button type="submit" class="btn-custom btn-custom-secondary">Edit User</button>
+                    <button type="submit" class="btn-custom btn-custom-secondary">Update Role</button>
                 </div>
             </form>
-
         </div>
+
+
+
+    </div>
 @endsection

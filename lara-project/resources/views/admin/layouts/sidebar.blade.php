@@ -52,7 +52,7 @@
               <a href="{{ route('roles.index') }}" 
                 class="sidebar-menu-link {{ activeLink('roles*') }}" id="menu-blankpage"
                 title="Blank Page">
-                <i class="bi-people"></i>
+                <i class="bi bi-file-earmark-person"></i>
                 <span>Roles</span>
               </a>
             </li>
