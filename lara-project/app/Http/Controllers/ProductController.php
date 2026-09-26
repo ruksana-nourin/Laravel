@@ -14,7 +14,7 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         // $products = Product::all();
         // $products = Product::from('products as p')
@@ -22,11 +22,37 @@ class ProductController extends Controller
         //                     ->join('brands as b', 'p.brand_id', '=', 'b.id')
         //                     ->select('p.*', 'c.name as category_name', 'b.name as brand_name')
         //                     ->get();
+        // if($request->search . $request->category . $request->brand){
+        //     dd($request->search ." ". $request->category." ".$request->brand);
+        // }
+        // if($request->category){
+        //     dd($request->category);
+        // }
+        // if($request->brand){
+        //     dd($request->brand);
+        // }
+        $query= Product::query();
+        if($request->search){
+            $query->where('name', 'like',"%{$request->search}%");
+        }
+        if($request->category){
+            $query->where('category_id',$request->category);
+        }
+        if($request->brand){
+            $query->where('brand_id',$request->brand);
+        }
+        $products = $query->with('category', 'brand')->orderBy('id', 'desc')->paginate(10);
 
-        $products = Product::with('category', 'brand')->orderBy('id', 'desc')->paginate(10);
+
+
+
+        $categories = Category::orderBy('name', 'asc')->get();
+        $brands = Brand::orderBy('name', 'asc')->get();
+        // $products = Product::with('category', 'brand')->orderBy('id', 'desc')->paginate(10);
 
         // dd($products->first()->category->name);
-        return view('admin.pages.product.index', compact('products'));
+        return view('admin.pages.product.index', compact('products','categories',
+            'brands'));
     }
 
     /**

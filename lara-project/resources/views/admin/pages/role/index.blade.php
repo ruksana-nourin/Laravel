@@ -26,7 +26,7 @@
       <!-- Search bar -->
       <div class="table-search-box">
         <i class="bi bi-search table-search-icon"></i>
-        <input type="text" class="table-search-input" placeholder="Search orders or products...">
+        <input type="search" class="table-search-input" placeholder="Search roles...">
       </div>
       <!-- Action buttons / Filter options -->
       <div class="table-filter-group">

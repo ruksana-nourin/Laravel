@@ -25,29 +25,39 @@
   <div class="table-card-custom">
     <!-- Header Controls -->
     <div class="table-header-control">
-      <!-- Search bar -->
-      <div class="table-search-box">
-        <i class="bi bi-search table-search-icon"></i>
-        <input type="text" class="table-search-input" placeholder="Search orders or products...">
-      </div>
-      <!-- Action buttons / Filter options -->
-      <div class="table-filter-group">
-        <div class="dropdown">
-          <button class="btn-table-action dropdown-toggle" type="button" id="dropdownFilterStatus"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-funnel"></i> Status Filter
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownFilterStatus">
-            <li><a class="dropdown-item" href="#">All Statuses</a></li>
-            <li><a class="dropdown-item" href="#">Paid / Success</a></li>
-            <li><a class="dropdown-item" href="#">Processing</a></li>
-            <li><a class="dropdown-item" href="#">Cancelled / Failed</a></li>
-          </ul>
+      <form action="{{ route('products.index') }}" class="d-flex flex-md-nowrap flex-wrap gap-2 w-100">
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="search" class="form-control" name="search" value="{{ request('search') }}" placeholder="Search products...">
         </div>
-        <button class="btn-table-action" type="button">
-          <i class="bi bi-file-earmark-arrow-down"></i> Export
-        </button>
-      </div>
+        <div class="input-group">
+          <label class="input-group-text"><i class="bi bi-funnel me-1"></i> Category</label>
+          <select class="form-select" id="inputGroupSelect01" name="category">
+            <option selected="" disabled >Choose category...</option>
+            @foreach ($categories as $item)
+              <option value="{{ $item->id }}" @selected(request('category')== $item->id)>{{ $item->name }}</option>
+            @endforeach
+          </select>
+        </div>
+        <div class="input-group">
+          <label class="input-group-text"><i class="bi bi-funnel me-1"></i> Brand</label>
+          <select class="form-select" id="inputGroupSelect01" name="brand">
+            <option selected="" disabled>Choose brand...</option>
+            @foreach ($brands as $item)
+              <option value="{{ $item->id }}" value="{{ $item->id }}" @selected(request('brand')== $item->id)>{{ $item->name }}</option>
+            @endforeach
+          </select>
+        </div>
+        <!-- Action buttons / Filter options -->
+        <div class="table-filter-group">
+          <button class="btn-table-action" type="submit">
+            <i class="bi bi-search"></i>Search <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+        <a href="{{ route('products.index') }}" class="btn-table-action text-nowrap"><i class="bi bi-recycle">clear filter</i></a>
+      </form>
     </div>
 
     <!-- Responsive Table Wrapper -->
@@ -66,7 +76,7 @@
           </tr>
         </thead>
         <tbody>
-          @foreach ($products as $item)
+          @forelse ($products as $item)
 
             <!-- Row 1 -->
             <tr>
@@ -88,7 +98,7 @@
               <td class="table-product-name">{{ $item->brand->name ?? 'N/A' }}</td>
               <td class="table-product-name">{{ $item->price }}</td>
               <td class="table-product-name">{{ $item->quantity }}</td>
-              
+
               <td class="table-product-name">
                 @if($item->active == 1)
                   <span class="badge bg-success">Active</span>
@@ -101,11 +111,12 @@
                 <div class="d-flex justify-content-center gap-1">
                   <a href="{{ route('products.show', ['product' => $item->id]) }}" class="table-btn-action"
                     title="View details"><i class="bi bi-eye"></i></a>
-                  <a href="{{ route('products.edit', ['product' => $item->id]) }}" class="table-btn-action" title="Edit product"><i
-                      class="bi bi-pencil"></i></a>
+                  <a href="{{ route('products.edit', ['product' => $item->id]) }}" class="table-btn-action"
+                    title="Edit product"><i class="bi bi-pencil"></i></a>
 
                   <button type="button" class="table-btn-action delete" data-id="{{ $item->id }}"
-                    data-name="{{ $item->name }}" data-bs-toggle="modal" data-bs-target="#modalDelete" title="Delete product">
+                    data-name="{{ $item->name }}" data-bs-toggle="modal" data-bs-target="#modalDelete"
+                    title="Delete product">
                     <i class="bi bi-trash"></i>
                   </button>
 
@@ -113,7 +124,11 @@
                 </div>
               </td>
             </tr>
-          @endforeach
+            @empty
+            <tr>
+              <td colspan="7" class="text-center">No products found.</td>
+            </tr>
+          @endforelse
 
         </tbody>
       </table>
