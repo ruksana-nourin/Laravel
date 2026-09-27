@@ -86,7 +86,7 @@
                   @if ($item->image)
                     <img src="{{ $item->image }}" alt="" class="rounded-3" width="60" height="60">
                   @else
-                    <img src="https://placehold.net/1.png" alt="" class="rounded-3" width="60" height="60">
+                    <img src="https://placehold.net/1.png" alt="placeholder" class="rounded-3" width="60" height="60">
                   @endif
                   <div>
                     <h5 class="mb-0 fw-normal">{{ $item->name }}</h5>
