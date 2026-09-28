@@ -48,6 +48,21 @@
   
 
   <script src="{{ asset('assets-site/js/main.js')}}" defer></script>
+  <script src="{{ asset('helpers/cart-helper.js') }}"></script>
+  <script>
+    const cart = new CartHelper('laraCart');
+    // cart.addItem(1,"laptop",1000)
+    function addToCart(id,name,price,img){
+      // alert("item added to cart")
+      cart.addItem(id,name,price,img);
+       printItemsNumber();
+    }
+    console.log(cart.countItems());
+    function printItemsNumber(){
+      document.querySelector('.icon-btn--cart .count').innerText =cart.countItems();
+    }
+    printItemsNumber();
+  </script>
   @yield('scripts')
 
 </body>

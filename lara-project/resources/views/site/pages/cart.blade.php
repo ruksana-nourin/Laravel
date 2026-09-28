@@ -20,6 +20,7 @@
 
                     <div>
                         <div class="cart-list">
+
                             <article class="cart-row">
                                 <div class="pic"><img
                                         src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=200&amp;q=80&amp;auto=format&amp;fit=crop"
@@ -34,40 +35,6 @@
                                     <button data-act="+" aria-label="Increase">+</button>
                                 </div>
                                 <span class="subtotal">$280</span>
-                                <button class="remove" aria-label="Remove">✕</button>
-                            </article>
-
-                            <article class="cart-row">
-                                <div class="pic"><img
-                                        src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&amp;q=80&amp;auto=format&amp;fit=crop"
-                                        alt=""></div>
-                                <div class="info">
-                                    <div class="name">Apple Watch Series 9</div>
-                                    <div class="variant">41mm · Midnight aluminum · Sport band M/L</div>
-                                </div>
-                                <div class="qty">
-                                    <button data-act="-" aria-label="Decrease">−</button>
-                                    <input type="text" value="1" inputmode="numeric" aria-label="Quantity">
-                                    <button data-act="+" aria-label="Increase">+</button>
-                                </div>
-                                <span class="subtotal">$680</span>
-                                <button class="remove" aria-label="Remove">✕</button>
-                            </article>
-
-                            <article class="cart-row">
-                                <div class="pic"><img
-                                        src="https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=200&amp;q=80&amp;auto=format&amp;fit=crop"
-                                        alt=""></div>
-                                <div class="info">
-                                    <div class="name">Beats Studio Buds Pro</div>
-                                    <div class="variant">Black · Active noise cancelling</div>
-                                </div>
-                                <div class="qty">
-                                    <button data-act="-" aria-label="Decrease">−</button>
-                                    <input type="text" value="2" inputmode="numeric" aria-label="Quantity">
-                                    <button data-act="+" aria-label="Increase">+</button>
-                                </div>
-                                <span class="subtotal">$560</span>
                                 <button class="remove" aria-label="Remove">✕</button>
                             </article>
                         </div>
@@ -170,4 +137,60 @@
         </section>
 
     </main>
+@endsection
+@section('scripts')
+    <script>
+        // console.log(cart.getCart());
+        var cartlist = document.querySelector('.cart-list');
+        function printCart() {
+            var list = cart.getCart();
+            var html = '';
+            list.forEach(item => {
+                let img = item.img ? "{{ asset(':img') }}".replace(':img', item.img) : 'https://placehold.net/1.png';
+                html += `
+                    <article class="cart-row">
+                        <div class="pic"><img
+                                src="${img}"
+                                alt="${item.name}"></div>
+                        <div class="info">
+                            <div class="name">${item.name}</div>
+                            <div class="varient">৳${item.price}</div>
+                        </div>
+                        <div class="qty">
+                            <button data-act="-"  onclick="decreaseQTY(${item.id})" aria-label="Decrease"
+                            ${item.quantity <= 1 ? 'disabled' : ''}
+                            >−</button>
+                            <input type="text" value="${item.quantity}" inputmode="numeric" aria-label="Quantity">
+                            <button data-act="+" onclick="increaseQTY(${item.id})" aria-label="Increase">+</button>
+                        </div>
+                        <span class="subtotal">${item.price * item.quantity}</span>
+                        <button class="remove" aria-label="Remove" onclick="removeFromcart(${item.id})">✕</button>
+                    </article>
+                `;
+
+            });
+            cartlist.innerHTML = html
+
+        }
+        printCart();
+
+
+        function removeFromcart(id) {
+            cart.removeItem(id);
+            printCart();
+             printItemsNumber();
+
+        }
+        function decreaseQTY(id) {
+            cart.decreaseQuantity(id);
+            printCart();
+
+        }
+        function increaseQTY(id) {
+            cart.increaseQuantity(id);
+            printCart();
+
+        }
+
+    </script>
 @endsection
