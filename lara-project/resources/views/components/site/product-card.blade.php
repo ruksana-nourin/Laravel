@@ -50,7 +50,7 @@
             </button>
             @if ($item->image)
 
-                <img src="{{ $item->image }}" alt="{{ $item->name }}">
+                <img src="{{ asset($item->image) }}" alt="{{ $item->name }}">
             @else
                 <img src="https://placehold.net/1.png" alt="">
             @endif
