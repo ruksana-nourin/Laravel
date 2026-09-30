@@ -10,14 +10,31 @@
                 <div class="crumbs"><a href="index.html">Home</a> <span class="sep">›</span> <span>Shopping cart</span>
                 </div>
                 <h1>Your cart</h1>
-                <p>3 items · ready to ship. Free delivery on this order. Estimated arrival 21 – 23 May.</p>
+                <p>Ready to ship. Free delivery on this order. Estimated arrival 21 – 23 May.</p>
+                @if (session('success'))
+                    <div
+                        style="margin-top: var(--s7); padding: var(--s6); background: linear-gradient(135deg, var(--indigo), var(--card-purple)); color: var(--paper); border-radius: var(--r-lg); position: relative; overflow: hidden">
+                        <div
+                            style="position: absolute; inset: 0; background-image: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.18) 0, transparent 40%); pointer-events: none">
+                        </div>
+                        <div style="position: relative">
+                            <h5 style="color: var(--paper); font-size: var(--text-xl); margin-bottom: var(--s3)">
+                                {{ session('success') }}
+                            </h5>
+                            <a href="/" class="btn btn--paper">Continue Shopping →</a>
+                        </div>
+                    </div>
+                @endif
             </div>
         </section>
 
+
         <section class="section">
             <div class="container">
-                <div class="cart-layout">
 
+
+
+                <div class="cart-layout">
                     <div>
                         <div class="cart-list">
 
@@ -102,7 +119,7 @@
                         </div>
                         <div class="cart-line"><span>Estimated tax</span>
                             <span style="font-family:var(--ff-display); font-weight:600; color:var(--ink)"
-                                id="tax">৳0</span>
+                                id="tax">$0</span>
                         </div>
 
 
@@ -161,6 +178,11 @@
 @endsection
 
 @section('scripts')
+    @if (session('success'))
+        <script>
+            cart.emptyCart();
+        </script>
+    @endif
     <script>
         // ==============Cart=========================
         // console.log(cart.getCart());
@@ -169,36 +191,36 @@
             var list = cart.getCart();
             var html = '';
             var subtotal = 0;
-            document.querySelector('.checkout-form input[name="items"]').value= JSON.stringify(list);
+            document.querySelector('.checkout-form input[name="items"]').value = JSON.stringify(list);
             list.forEach(item => {
                 let img = item.img ? "{{ asset(':img') }}".replace(':img', item.img) : 'https://placehold.net/1.png';
                 html += `
-                                    <article class="cart-row">
-                                        <div class="pic"><img
-                                                src="${img}"
-                                                alt="${item.name}"></div>
-                                        <div class="info">
-                                            <div class="name">${item.name}</div>
-                                            <div class="varient">৳${item.price}</div>
-                                        </div>
-                                        <div class="qty">
-                                            <button data-act="-"  onclick="decreaseQTY(${item.id})" aria-label="Decrease"
-                                            ${item.quantity <= 1 ? 'disabled' : ''}
-                                            >−</button>
-                                            <input type="text" value="${item.quantity}" inputmode="numeric" aria-label="Quantity">
-                                            <button data-act="+" onclick="increaseQTY(${item.id})" aria-label="Increase">+</button>
-                                        </div>
-                                        <span class="subtotal">৳${(item.price * item.quantity).toFixed(2)}</span>
-                                        <button class="remove" aria-label="Remove" onclick="removeFromcart(${item.id})">✕</button>
-                                    </article>
-                                `;
+                                                                <article class="cart-row">
+                                                                    <div class="pic"><img
+                                                                            src="${img}"
+                                                                            alt="${item.name}"></div>
+                                                                    <div class="info">
+                                                                        <div class="name">${item.name}</div>
+                                                                        <div class="varient">$${item.price}</div>
+                                                                    </div>
+                                                                    <div class="qty">
+                                                                        <button data-act="-"  onclick="decreaseQTY(${item.id})" aria-label="Decrease"
+                                                                        ${item.quantity <= 1 ? 'disabled' : ''}
+                                                                        >−</button>
+                                                                        <input type="text" value="${item.quantity}" inputmode="numeric" aria-label="Quantity">
+                                                                        <button data-act="+" onclick="increaseQTY(${item.id})" aria-label="Increase">+</button>
+                                                                    </div>
+                                                                    <span class="subtotal">$${(item.price * item.quantity).toFixed(2)}</span>
+                                                                    <button class="remove" aria-label="Remove" onclick="removeFromcart(${item.id})">✕</button>
+                                                                </article>
+                                                            `;
                 subtotal += parseFloat(item.price * item.quantity);
             });
             cartlist.innerHTML = html;
-            document.querySelector('#subtotal').innerText = `৳${subtotal.toFixed(2)}`;
-            document.querySelector('#shippingCost').innerText = `৳${(subtotal ? 120 : 0.00)}`;
-            document.querySelector('#tax').innerText = `৳${(subtotal * .05).toFixed(2)}`;
-            document.querySelector('#total').innerText = `৳${(subtotal + (subtotal ? 120 : 0.00) + (subtotal * .05)).toFixed(2)}`;
+            document.querySelector('#subtotal').innerText = `$${subtotal.toFixed(2)}`;
+            document.querySelector('#shippingCost').innerText = `$${(subtotal ? 120 : 0.00)}`;
+            document.querySelector('#tax').innerText = `$${(subtotal * .05).toFixed(2)}`;
+            document.querySelector('#total').innerText = `$${(subtotal + (subtotal ? 120 : 0.00) + (subtotal * .05)).toFixed(2)}`;
 
         }
         printCart();
@@ -227,7 +249,5 @@
             document.querySelector('.checkout-form').style.display = 'block';
 
         })
-
-
     </script>
 @endsection

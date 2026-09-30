@@ -46,7 +46,7 @@
                     <p class="desc">{{ $product->description }}</p>
 
                     <div class="price-row">
-                        <span class="now">৳ {{ $product->price }}</span>
+                        <span class="now">$ {{ $product->price }}</span>
 
                     </div>
 

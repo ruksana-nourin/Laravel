@@ -44,3 +44,4 @@ Route::middleware('auth', 'role_id:1,2,3,4')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/payment-web.php';

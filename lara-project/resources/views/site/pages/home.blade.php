@@ -188,7 +188,7 @@
                             </a>
 
                             <div class="price">
-                                <span class="now">৳ {{ $item->price }}</span>
+                                <span class="now">$ {{ $item->price }}</span>
                             </div>
 
                             <div class="stars">

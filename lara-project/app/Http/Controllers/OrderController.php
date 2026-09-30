@@ -47,6 +47,8 @@ class OrderController extends Controller
             ]);
         }
 
+        return redirect()->route('cart')->with('success','Your order has been placed.Thanks for shopping with us.');
+
 
     }
 
