@@ -17,6 +17,7 @@ class UploadImages
         $path = 'uploads',
         $img_name = null
     ) {
+
         if (!is_dir(public_path($path))) {
             mkdir(public_path($path), 0755, true);
         }
