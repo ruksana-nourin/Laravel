@@ -6,6 +6,7 @@ use App\Http\Controllers\AttendanceRecordController;
 use App\Http\Controllers\AttendanceSessionController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\FeeCategoryController;
 use App\Http\Controllers\FeePaymentController;
 use App\Http\Controllers\FeeStructureController;
@@ -49,6 +50,7 @@ Route::resource('fee-payments', FeePaymentController::class);
 Route::resource('teachers', TeacherController::class);
 Route::resource('subjects', SubjectController::class);
 Route::resource('attendance-sessions', AttendanceSessionController::class);
+Route::resource('exams', ExamController::class);
 
 Route::get(
     'students/courses/{department}',
