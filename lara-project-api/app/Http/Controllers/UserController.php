@@ -27,6 +27,7 @@ class UserController extends Controller
         // dd($Users);
         // return view('admin.pages.user.index', compact('Users'));
         return response()->json([
+            'success' => true,
             'users' => $Users,
         ]);
     }
