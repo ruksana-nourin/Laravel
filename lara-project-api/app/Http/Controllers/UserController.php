@@ -21,8 +21,8 @@ class UserController extends Controller
         $Users = User::join('roles as r', 'users.role_id', '=', 'r.id')
             ->orderBy('id', 'desc')
             ->select('users.id', 'users.name', 'users.email', 'r.name as role')
-            // ->paginate(10);
-            ->get();
+            ->paginate(10);
+            // ->get();
 
         // dd($Users);
         // return view('admin.pages.user.index', compact('Users'));
@@ -55,7 +55,7 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|min:3|max:50',
             'email' => 'required|email|unique:users,email',
-            'role_id' => 'required',
+            'role_id' => 'required|exists:roles,id',
             'password' => 'required|min:3|max:15',
             'password_confirmation' => 'required|same:password',
         ]);

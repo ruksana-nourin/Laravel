@@ -48,7 +48,11 @@ class RoleController extends Controller
 
         // dd($roles);
 
-        return view('admin.pages.role.index', ['roles' => $roles]);
+        // return view('admin.pages.role.index', ['roles' => $roles]);
+        return response()->json([
+            'success' => true,
+            'roles' => $roles,
+        ]);
 
     }
 
