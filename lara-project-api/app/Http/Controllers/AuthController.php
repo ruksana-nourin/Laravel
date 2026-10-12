@@ -57,7 +57,7 @@ class AuthController extends Controller
         ]);
         if($result){
             $user = Auth::user();
-            $token = $user->createToken('mobile')->plainTextToken;
+            $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
             "success" =>    true,
@@ -83,5 +83,23 @@ class AuthController extends Controller
         $request->user()->tokens()->delete();
 
         return response()->json("logout is working");
+    }
+    public function checkToken(Request $request){
+        $result = Auth::guard('sanctum')->check();
+        if(!$result){
+            return response()->json([
+            'error' =>true,
+            'message' => 'invalid token'
+            ],401);
+        }else{
+             $user = Auth::guard('sanctum')->user();
+
+            return response()->json([
+            "success" =>    true,
+            'user' => $user,
+            ]);
+        }
+        return response()->json($result);
+        // return response()->json("token checked");
     }
 }
