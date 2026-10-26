@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::apiResource('/users', UserController::class);
+Route::apiResource('/products', ProductController::class)->names('api.products');
 Route::apiResource('/roles', RoleController::class);
 
 // Auth routes
