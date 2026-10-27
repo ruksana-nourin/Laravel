@@ -19,7 +19,7 @@ class ProductController extends Controller
         $query = Product::query();
 
         if ($request->search) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
         if ($request->category_id) {
             $query->where('category_id', $request->category_id);
@@ -30,13 +30,13 @@ class ProductController extends Controller
 
         $products = $query->with('category', 'brand')
             ->orderBy('id', 'desc')
-            ->get();
+            ->paginate(10);
 
         return response()->json([
-            'success'    => true,
-            'products'   => $products,
+            'success' => true,
+            'products' => $products,
             'categories' => Category::orderBy('name', 'asc')->get(),
-            'brands'     => Brand::orderBy('name', 'asc')->get(),
+            'brands' => Brand::orderBy('name', 'asc')->get(),
         ]);
     }
 
@@ -45,18 +45,24 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+         if ($request->hasFile('image')) {
+            return response()->json('Image found');
+        } else {
+            return response()->json('Image not found');
+        }
         $validated = $request->validate([
-            'name'          => 'required|min:3',
-            'price'         => 'required|numeric',
-            'quantity'      => 'required|integer',
+            'name' => 'required|min:3',
+            'price' => 'required|numeric',
+            'quantity' => 'required|integer',
             'reorder_level' => 'required|integer',
-            'description'   => 'required|string',
-            'category_id'   => 'required|exists:categories,id',
-            'brand_id'      => 'required|exists:brands,id',
-            'active'        => 'boolean',
-            'image'         => 'image|mimes:jpeg,png,jpg|max:500',
+            'description' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
+            'active' => 'boolean',
+            'image' => 'image|mimes:jpeg,png,jpg|max:500',
         ]);
 
+       
         if ($request->hasFile('image')) {
             $validated['image'] = UploadImgService::upload($request->image, 'uploads/products');
         }
@@ -89,15 +95,15 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'name'          => 'required|min:3',
-            'price'         => 'required|numeric',
-            'quantity'      => 'required|integer',
+            'name' => 'required|min:3',
+            'price' => 'required|numeric',
+            'quantity' => 'required|integer',
             'reorder_level' => 'required|integer',
-            'description'   => 'required|string',
-            'category_id'   => 'required|exists:categories,id',
-            'brand_id'      => 'required|exists:brands,id',
-            'active'        => 'boolean',
-            'image'         => 'image|mimes:jpeg,png,jpg|max:500',
+            'description' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
+            'active' => 'boolean',
+            'image' => 'image|mimes:jpeg,png,jpg|max:500',
         ]);
 
         if ($request->hasFile('image')) {
