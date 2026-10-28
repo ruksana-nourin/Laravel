@@ -12,9 +12,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('id', 'desc')->paginate(10);
+        $categories = Category::orderBy('id', 'desc')->get();
 
-        return view('admin.pages.category.index', compact('categories'));
+        // return view('admin.pages.category.index', compact('categories'));
+        return response()->json([
+            'success' =>true,
+            'categories' =>$categories,
+        ]);
     }
 
     /**

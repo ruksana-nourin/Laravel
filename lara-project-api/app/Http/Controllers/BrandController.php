@@ -12,9 +12,13 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = Brand::orderBy('id', 'desc')->paginate(10);
+        $brands = Brand::orderBy('id', 'desc')->get();
 
-        return view('admin.pages.brand.index', compact('brands'));
+        // return view('admin.pages.brand.index', compact('brands'));
+         return response()->json([
+            'success' =>true,
+            'brands' =>$brands,
+        ]);
     }
 
     /**
